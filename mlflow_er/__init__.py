@@ -47,8 +47,8 @@ class ExperimentTracker:
         
         if tracking_uri != None:
             if "://" not in tracking_uri: # file:// and http://
-                tmp_tracking_uri = Path(tracking_uri).resolve().as_uri()
-            mlflow.set_tracking_uri(tmp_tracking_uri)
+                tracking_uri = Path(tracking_uri).resolve().as_uri()
+            mlflow.set_tracking_uri(tracking_uri)
 
         if experiment_name != None:
             self._experiment = mlflow.get_experiment_by_name(str(experiment_name)) # returns None if it doesn't exist

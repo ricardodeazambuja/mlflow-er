@@ -26,8 +26,9 @@ To launch a server (and UI):
 ## Examples!
 ### Toy (fake) example using everything as default
 The example below show how much time one can save by using background loggers. It will use background loggers when called with command line argument `--background_logger`. Be alerted that it will create a HUGE (1GB):
-```python
-```
+
+https://github.com/ricardodeazambuja/mlflow-er/blob/b3499e18e5e21f739ebd3b1f3c7f77a84e79b797/Examples/example.py#L1-L86
+
 The example above will expect all the data will be logged under `./mlruns`. You could pass another location by setting the the argument `tracking_uri`. Locations are `file://`, posix path, or the address shown when you use the [server](https://www.mlflow.org/docs/latest/tracking.html#tracking-server) (`$ mlflow server`). When you use the server it will, by default, log your stuff under `./mlruns` where the server was launched. Another caveat is that the artifacts will be stored, by default, under `./mlartifacts`, but without the server they are stored under each run in `./mlruns`. Another curiosity is related to when the folder where artifacts are stored is created: only after you have saved an artifact. For more details check [mlflow docs](https://www.mlflow.org/docs/latest/tracking.html#where-runs-are-recorded).
 
 The details about the arguments for `ExperimentTracker`:

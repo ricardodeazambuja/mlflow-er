@@ -267,4 +267,4 @@ class ExperimentTracker:
             res = check_output(['git', 'rev-parse', 'HEAD']).decode('ascii').strip()
         except CalledProcessError:
             res = ''
-        return 
+        return res

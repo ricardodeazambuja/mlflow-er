@@ -9,9 +9,8 @@ I wrote this because I was trying to get used to [mlflow](https://github.com/mlf
 
 If you are installing this where you are already root (e.g. docker container or google colab) or it's an enviroment created with [conda (mamba)](https://mamba.readthedocs.io/en/latest/user_guide/mamba.html#quickstart) or [normal python](https://docs.python.org/3/library/venv.html):
 ```
-$ pip install git+https://github.com/ricardodeazambuja/mlflow_er --upgrade
+$ pip install git+https://github.com/ricardodeazambuja/mlflow-er.git --upgrade
 ```
-
 ### UI
 Probably the main reason I decided to use mlflow was because it has a GUI that can replace tensorboard while saving things in a human readable way (if you want). The mlflow UI is launched in two different ways.
 

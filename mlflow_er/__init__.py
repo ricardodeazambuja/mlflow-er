@@ -170,6 +170,32 @@ class ExperimentTracker:
     def get_all_runs(self):
         return mlflow.search_runs(self.id)
 
+    def find_run(self, run_name=None, run_id=None):
+        runs = self.get_all_runs() # TODO: check how expensive (and useful) this is...
+        if not runs.empty:
+            if run_name and (run_id is None):
+                try:
+                    run_id = runs.where(runs['tags.mlflow.runName'] == run_name).dropna()['run_id'].values[0]
+                    return run_name, run_id
+                except IndexError:
+                    # It means nothing was found... easier than checking :)
+                    pass
+                except KeyError:
+                    # It means nothing was found... easier than checking :)
+                    pass
+            if run_id and (run_name is None):
+                try:
+                    run_name = runs.where(runs['run_id'] == run_id).dropna()['tags.mlflow.runName'].values[0]
+                    return run_name, run_id
+                except IndexError:
+                    # It means nothing was found... easier than checking :)
+                    pass
+                except KeyError:
+                    # It means nothing was found... easier than checking :)
+                    pass
+            
+        return None, None
+
     def background_worker(self, name, logger, use_process=False, *args, **kwargs):
         """Quick and dirty way to log in the background
         Only really useful when IO is slow enough for you to bother.
@@ -214,7 +240,7 @@ class ExperimentTracker:
         run_name: str
             It will try to find a previous run with this name.
         run_id: str
-            It will try to find a previous run with this ID (priority is given to the name).
+            It will try to find a previous run with this ID.
         description: str
             Description saved for this run.
         nested: bool
@@ -222,29 +248,12 @@ class ExperimentTracker:
         run_tags:
             All other keyword arguments will be considered as tags that you want to associate with this run/
         """
-
-        runs = self.get_all_runs() # TODO: check how expensive (and useful) is this...
-        if not runs.empty:
-            if run_name:
-                try:
-                    run_id = runs.where(runs['tags.mlflow.runName'] == run_name).dropna()['run_id'].values[0]
-                    print(f"Using a previous run named {run_name} with id {run_id}.")
-                except IndexError:
-                    # It means nothing was found... easier than checking :)
-                    pass
-                except KeyError:
-                    # It means nothing was found... easier than checking :)
-                    pass
-            elif run_id:
-                try:
-                    run_name = runs.where(runs['run_id'] == run_name).dropna()['tags.mlflow.runName'].values[0]
-                    print(f"Using a previous run with id {run_id} named {run_name} .")
-                except IndexError:
-                    # It means nothing was found... easier than checking :)
-                    pass
-                except KeyError:
-                    # It means nothing was found... easier than checking :)
-                    pass
+        
+        tmp_run_name, tmp_run_id = self.find_run(run_name, run_id)
+        if tmp_run_name:
+            run_name = tmp_run_name
+            run_id = tmp_run_id
+            print(f"Using a previous run named {run_name} with id {run_id}.")
 
         # Start run and get status
         mlflow.start_run(run_id=run_id, 

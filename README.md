@@ -23,6 +23,9 @@ To launch a server (and UI):
 (to get help: $mlflow server --help)
 
 ## Examples!
+### Testing it using Google Colab
+* [TestingUsingGoogleColab.ipynb](TestingUsingGoogleColab.ipynb)
+
 ### Toy (fake) example using everything as default
 The example below show how much time one can save by using background loggers. It will use background loggers when called with command line argument `--background_logger`. Be alerted that it will create a HUGE (1GB):
 

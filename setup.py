@@ -10,6 +10,7 @@ with open("README.md", "r") as fh:
 setup(
     name="mlflow_er",
     packages=[package for package in find_packages()],
+    python_requires='>=3.8',
     version="0.0.1",
     license='Apache Software License (http://www.apache.org/licenses/LICENSE-2.0)',
     description="teeny-tiny mlflow helper",

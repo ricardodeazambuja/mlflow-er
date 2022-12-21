@@ -6,6 +6,9 @@ from pathlib import Path
 from contextlib import contextmanager
 from threading import Thread
 from multiprocessing import Process
+from urllib.request import urlopen
+from urllib.error import URLError
+from urllib.parse import urlparse
 
 import mlflow
 from mlflow.entities.lifecycle_stage import LifecycleStage
@@ -29,8 +32,9 @@ class ExperimentTracker:
             it will search for an experiment with this ID and raise an error when not found.
             By default, it creates a new experiment ID when you create a new experiment and experiment_id==None.
         tracking_uri: str 
-            A URI (file://, http://, https://) or a path to where the mlflow is saving the data (server or local).
+            A URI (file://, http://, https://, sqlite://, postgresql://, s3://) or a path to where the mlflow is saving the data (server or local).
             By default, data will be logged to the (local) ./mlruns directory.
+            (mlflow will, eventually, raise a MlflowException if the server is not accessible)
         artifact_location: str
             The location to store run artifacts.
             If not provided: when using $mlflow server, it will store under mlartifacts; 
@@ -46,8 +50,19 @@ class ExperimentTracker:
         self._experiment = None
         
         if tracking_uri != None:
-            if "://" not in tracking_uri: # file:// and http://
+            if ("://" not in tracking_uri) or "file://" in tracking_uri:
+                parsed = urlparse(tracking_uri)
+                tracking_uri = parsed.path
+                if not Path(tracking_uri).exists():
+                    raise RuntimeError(f"Path \"{tracking_uri}\" doesn't exist")
                 tracking_uri = Path(tracking_uri).resolve().as_uri()
+            elif ("http://" in tracking_uri) or ("https://" in tracking_uri):
+                try:
+                    urlopen(tracking_uri)
+                except URLError as err:
+                    raise RuntimeError(f"{tracking_uri} - {err.reason.strerror}")
+            else:
+                pass # not sure how to easily test for the other possible options...
             mlflow.set_tracking_uri(tracking_uri)
 
         if experiment_name != None:

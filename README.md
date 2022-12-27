@@ -27,7 +27,7 @@ To launch a server (and UI):
 * [TestingUsingGoogleColab.ipynb](TestingUsingGoogleColab.ipynb)
 
 ### Toy (fake) example using everything as default
-The example below show how much time one can save by using background loggers. It will use background loggers when called with command line argument `--background_logger`. Be alerted that it will create a HUGE (1GB):
+The example below show how much time one can save by using background loggers. It will use background loggers when called with command line argument `--background_logger`. Be alerted that it will create a HUGE (1GB) dummy file:
 
 https://github.com/ricardodeazambuja/mlflow-er/blob/b3499e18e5e21f739ebd3b1f3c7f77a84e79b797/Examples/example.py#L1-L86
 

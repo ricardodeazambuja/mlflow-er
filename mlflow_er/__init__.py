@@ -175,7 +175,8 @@ class ExperimentTracker:
         if not runs.empty:
             if run_name and (run_id is None):
                 try:
-                    run_id = runs.where(runs['tags.mlflow.runName'] == run_name).dropna()['run_id'].values[0]
+                    run_id = runs.where(runs['tags.mlflow.runName'] == run_name).dropna(how='all')['run_id'].values[0]
+                    # dropna(how='all') will only remove a row if ALL columns are None or NaN
                     return run_name, run_id
                 except IndexError:
                     # It means nothing was found... easier than checking :)
@@ -185,7 +186,8 @@ class ExperimentTracker:
                     pass
             if run_id and (run_name is None):
                 try:
-                    run_name = runs.where(runs['run_id'] == run_id).dropna()['tags.mlflow.runName'].values[0]
+                    run_name = runs.where(runs['run_id'] == run_id).dropna(how='all')['tags.mlflow.runName'].values[0]
+                    # dropna(how='all') will only remove a row if ALL columns are None or NaN
                     return run_name, run_id
                 except IndexError:
                     # It means nothing was found... easier than checking :)
